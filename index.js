@@ -68,17 +68,23 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
   }
 });
 
-// 🌍 Web server for UptimeRobot
+// 🌍 Web server for UptimeRobot & keep bot alive
 const express = require("express");
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Bot is online!");
-});
+// 🔹 Keep bot running
+function keepAlive() {
+  app.get("/", (req, res) => {
+    res.send("Bot is online!");
+  });
 
-app.listen(3000, () => {
-  console.log("🌍 Web server running...");
-});
+  app.listen(3000, () => {
+    console.log("🌍 Web server running...");
+  });
+}
+
+// Call keepAlive() to ensure the bot stays online
+keepAlive();
 
 // 🔔 Trigger webhook if bot disconnects
 process.on("SIGTERM", async () => {
@@ -92,5 +98,3 @@ process.on("SIGINT", async () => {
 });
 
 client.login(process.env.TOKEN);
-
-
